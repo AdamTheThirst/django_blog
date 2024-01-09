@@ -7,6 +7,16 @@ from core import models as core_models
 
 # Create your models here.
 
+# Модельный менеджер - извлекает только опубликованные/неопубликованные посты посты
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=Post.Status.PUBLISHED)
+
+class DraftManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=Post.Status.DRAFT)
+
+# Основная таблица
 class Post(core_models.TimeStampedModel):
 
     class Status(models.TextChoices):
@@ -26,10 +36,16 @@ class Post(core_models.TimeStampedModel):
     def __str__(self):
         return self.title
 
+    object = models.Manager()
+    published = PublishedManager()
+
     class Meta:
         ordering = ['-publish']
 
         indexes = [
             models.Index(fields=['-publish'])
         ]
+
+        verbose_name = 'Пост'
+        verbose_name_plural = 'Посты'
 

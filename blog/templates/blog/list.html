@@ -9,9 +9,13 @@
 
     {% for post in posts %}
         <h3>
-            <a href="#">
+            <a href="{% url 'blog:post_detail' post.id %}">
                 {{ post.title }}
             </a>
         </h3>
+        <p>
+            Published {{ post.publish }} by {{ post.author }}
+        </p>
+        {{ post.body|truncatewords:30|linebreaks }}
     {% endfor %}
 {% endblock %}
